@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-sm-6">
+    <div class= "d-flex justify-content-center"><img class="card-img-top" src="{{comic.data.results[0].thumbnail.path}}/portrait_incredible.jpg"></div>
+  </div>
+  <div class="col-sm-6">
+    <h1 class="display-4">{{comic.data.results[0].title}}</h1>
+    <p class="lead">About:</p>
+    <p class="lead">{{comic.data.results[0].description}}</p>
+    <p class="lead">Price: {{comic.data.results[0].prices[0].price}}</p>
+    <button type="button" (click)="buy()" class="btn btn-secondary btn-lg btn-block">Add to List buy</button>
+  </div>
+
+</div>
+
+

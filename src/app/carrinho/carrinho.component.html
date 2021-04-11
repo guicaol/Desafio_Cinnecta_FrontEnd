@@ -1,0 +1,26 @@
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+
+      <th scope="col">Title</th>
+      <th scope="col">Units</th>
+      <th scope="col">Price for units</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of listAll">
+
+      <td>{{product.title}}</td>
+      <td>{{product.units}}</td>
+      <td>{{product.price}}</td>
+      <td><span class="float-right">
+            <button type="button" (click)="deletar(product.id)" class="btn btn-danger">Remove</button>
+            </span>
+        </td>
+    </tr>
+    <tr>
+
+    </tr>
+  </tbody>
+</table>
