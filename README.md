@@ -1,4 +1,4 @@
 # Projeto
 
-ng serve para rodas
+ng serve para rodar
 http://localhost:4200
