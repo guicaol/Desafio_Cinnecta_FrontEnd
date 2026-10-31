@@ -1,26 +1,32 @@
-<table class="table">
-  <thead class="thead-dark">
-    <tr>
+<div class="comic-cart">
 
-      <th scope="col">Title</th>
-      <th scope="col">Units</th>
-      <th scope="col">Price for units</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let product of listAll">
+  <div class="comic-cart__head">
+    <h1 class="comic-cart__title">Seu Carrinho</h1>
+  </div>
 
-      <td>{{product.title}}</td>
-      <td>{{product.units}}</td>
-      <td>{{product.price}}</td>
-      <td><span class="float-right">
-            <button type="button" (click)="deletar(product.id)" class="btn btn-danger">Remove</button>
-            </span>
-        </td>
-    </tr>
-    <tr>
+  <div class="comic-cart__list" *ngIf="listAll?.length; else vazio">
+    <div class="comic-cart__item" *ngFor="let product of listAll; let i = index">
+      <span class="comic-cart__badge">{{ i + 1 }}</span>
+      <div>
+        <div class="comic-cart__name">{{ product.title }}</div>
+        <div class="comic-cart__meta">{{ product.units }} un · ${{ product.price }} cada</div>
+      </div>
+      <div class="comic-cart__price">${{ (product.price * product.units) | number:'1.2-2' }}</div>
+      <button type="button" (click)="deletar(product.id)" class="comic-btn comic-btn--danger">Remover</button>
+    </div>
 
-    </tr>
-  </tbody>
-</table>
+    <div class="comic-cart__footer">
+      <span class="comic-cart__total-label">Total</span>
+      <span class="comic-cart__total">${{ total | number:'1.2-2' }}</span>
+    </div>
+  </div>
+
+  <ng-template #vazio>
+    <div class="comic-empty">
+      <span class="comic-empty__pow">Vazio!</span>
+      <p class="comic-empty__text">Nenhuma HQ no carrinho ainda.</p>
+      <a routerLink="" class="comic-btn">Ver quadrinhos</a>
+    </div>
+  </ng-template>
+
+</div>

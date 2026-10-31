@@ -1,16 +1,15 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="comic-nav">
+  <a routerLink="" class="comic-nav__brand" aria-label="Página inicial">
+    <span class="comic-nav__brand-mark">HQ</span>
+    <span class="comic-nav__brand-text">Marvel</span>
+  </a>
 
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav " routeraLinkActive="active">
-      <li class="nav-item active">
-        <a routerLink=""  class="nav-link" >Produtos<span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active" routeraLinkActive="active">
-        <a routerLink="carrinho"  class="nav-link" >Carrinho<span class="sr-only">(current)</span></a>
-      </li>
-    </ul>
-  </div>
+  <ul class="comic-nav__links">
+    <li>
+      <a routerLink="" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" class="comic-nav__link">Produtos</a>
+    </li>
+    <li>
+      <a routerLink="carrinho" routerLinkActive="is-active" class="comic-nav__link">Carrinho</a>
+    </li>
+  </ul>
 </nav>

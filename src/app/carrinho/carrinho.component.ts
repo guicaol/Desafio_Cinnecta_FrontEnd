@@ -14,6 +14,14 @@ export class CarrinhoComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  get total(): number {
+    return this.listAll.reduce(
+      (acc, p) => acc + (Number(p?.price) || 0) * (Number(p?.units) || 1),
+      0
+    );
+  }
+
   list() {
     Object.keys(localStorage).forEach(data => {
       let item = this.localStorage.get(data);
