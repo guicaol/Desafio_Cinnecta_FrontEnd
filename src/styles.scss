@@ -1,2 +1,636 @@
-/* You can add global styles to this file, and also import other style files */
-@import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+/* ==========================================================================
+   HQS MARVEL — Sistema visual "Comic Book"
+   Papel newsprint + halftone, tinta preta grossa, sombras duras, sunburst.
+   Bootstrap continua carregado só pelo grid; o resto é reescrito aqui.
+   ========================================================================== */
+@import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+
+:root {
+  /* Tinta e papel */
+  --ink:        #15130d;
+  --paper:      #f5ead2;
+  --paper-2:    #fbf4e2;
+  --dot:        rgba(21, 19, 13, .13);
+
+  /* Cores de quadrinho */
+  --red:        #e62329;
+  --red-dark:   #b2161b;
+  --yellow:     #ffd02e;
+  --blue:       #2340c0;
+  --blue-dark:  #182e8f;
+  --pink:       #ff4d8d;
+  --cream:      #fff7e6;
+
+  /* Traço e sombra */
+  --line:       4px;
+  --shadow:     7px 7px 0 var(--ink);
+  --shadow-sm:  4px 4px 0 var(--ink);
+  --shadow-lg:  11px 11px 0 var(--ink);
+  --radius:     6px;
+
+  --font-pow:   'Bangers', 'Impact', sans-serif;
+  --font-impact:'Archivo Black', sans-serif;
+  --font-body:  'Barlow', system-ui, sans-serif;
+}
+
+/* ------------------------------ Base ----------------------------------- */
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(var(--dot) 1.5px, transparent 1.6px),
+    radial-gradient(var(--dot) 1.5px, transparent 1.6px);
+  background-position: 0 0, 7px 7px;
+  background-size: 14px 14px, 14px 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--yellow); color: var(--ink); }
+
+a { color: inherit; text-decoration: none; }
+
+/* O container do app (app.component.html) */
+.container {
+  max-width: 1200px;
+  padding: 0 20px 72px;
+}
+
+h1, h2, h3, h4, h5 { font-family: var(--font-impact); letter-spacing: .3px; }
+
+/* Utilitário de outline estilo HQ para textos grandes */
+@mixin ink-outline($c: var(--cream)) {
+  color: $c;
+  text-shadow:
+    -2px -2px 0 var(--ink), 2px -2px 0 var(--ink),
+    -2px  2px 0 var(--ink), 2px  2px 0 var(--ink),
+     4px  5px 0 var(--red);
+}
+
+/* ============================ NAVBAR =================================== */
+.comic-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px clamp(16px, 4vw, 40px);
+  background: var(--red);
+  border-bottom: var(--line) solid var(--ink);
+  box-shadow: 0 6px 0 rgba(21, 19, 13, .22);
+}
+
+.comic-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.comic-nav__brand-mark {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  font-family: var(--font-pow);
+  font-size: 1.7rem;
+  line-height: 1;
+  color: var(--ink);
+  background: var(--yellow);
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: var(--shadow-sm);
+  transform: rotate(-6deg);
+}
+
+.comic-nav__brand-text {
+  font-family: var(--font-pow);
+  font-size: 1.9rem;
+  letter-spacing: 1px;
+  color: var(--cream);
+  text-shadow: 2px 2px 0 var(--ink);
+}
+
+.comic-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comic-nav__link {
+  display: inline-block;
+  padding: 8px 18px;
+  font-family: var(--font-impact);
+  font-size: .82rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: var(--shadow-sm);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.comic-nav__link:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+  background: var(--yellow);
+}
+
+.comic-nav__link.is-active {
+  background: var(--yellow);
+  transform: rotate(-2deg);
+}
+
+/* ============================= HERO =================================== */
+.comic-page { padding-top: 32px; }
+
+.comic-hero {
+  position: relative;
+  margin: 8px 0 52px;
+  padding: clamp(40px, 7vw, 76px) 20px;
+  text-align: center;
+  overflow: hidden;
+  border: 5px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  background:
+    repeating-conic-gradient(from 0deg at 50% 42%,
+      var(--red) 0deg 7deg, var(--red-dark) 7deg 14deg);
+}
+
+/* Camada halftone sobre o sunburst */
+.comic-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(21,19,13,.22) 2px, transparent 2.5px);
+  background-size: 16px 16px;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.comic-hero__inner { position: relative; z-index: 2; }
+
+.comic-hero__kicker {
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 5px 16px;
+  font-family: var(--font-impact);
+  font-size: .72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--yellow);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-sm);
+  transform: rotate(-2deg);
+}
+
+.comic-hero__title {
+  margin: 0;
+  font-family: var(--font-pow);
+  font-weight: 400;
+  font-size: clamp(3.4rem, 12vw, 7.5rem);
+  line-height: .92;
+  letter-spacing: 2px;
+  @include ink-outline(var(--cream));
+}
+
+.comic-hero__lead {
+  margin: 18px auto 0;
+  max-width: 540px;
+  font-size: clamp(1rem, 2.4vw, 1.3rem);
+  font-weight: 700;
+  color: var(--cream);
+  text-shadow: 2px 2px 0 var(--ink);
+}
+
+/* Estrela "NEW!" no canto */
+.comic-hero__burst {
+  position: absolute;
+  top: -14px;
+  right: clamp(8px, 5vw, 56px);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: clamp(84px, 16vw, 128px);
+  height: clamp(84px, 16vw, 128px);
+  font-family: var(--font-pow);
+  font-size: clamp(1.3rem, 3.5vw, 2rem);
+  color: var(--ink);
+  background: var(--yellow);
+  clip-path: polygon(50% 0, 61% 30%, 98% 20%, 72% 48%, 95% 78%, 59% 68%, 50% 100%, 41% 68%, 5% 78%, 28% 48%, 2% 20%, 39% 30%);
+  filter: drop-shadow(4px 4px 0 var(--ink));
+  transform: rotate(14deg);
+  animation: wobble 3.2s ease-in-out infinite;
+}
+
+/* =========================== GRID DE PRODUTOS ========================== */
+.comic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 30px;
+}
+
+.comic-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper-2);
+  border: var(--line) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: panel-in .5s cubic-bezier(.2, .8, .3, 1) forwards;
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+
+.comic-card:nth-child(odd)  { rotate: -.8deg; }
+.comic-card:nth-child(even) { rotate:  .8deg; }
+
+.comic-card:hover {
+  transform: translate(-3px, -5px) rotate(0deg);
+  box-shadow: var(--shadow-lg);
+  z-index: 5;
+}
+
+.comic-card__media {
+  position: relative;
+  border-bottom: var(--line) solid var(--ink);
+  background: var(--ink);
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+}
+
+.comic-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .4s ease;
+}
+
+.comic-card:hover .comic-card__img { transform: scale(1.06); }
+
+.comic-card__num {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  padding: 2px 9px;
+  font-family: var(--font-pow);
+  font-size: 1.1rem;
+  color: var(--cream);
+  background: var(--blue);
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  transform: rotate(-6deg);
+}
+
+.comic-card__price {
+  position: absolute;
+  bottom: -10px;
+  right: 10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  min-width: 56px;
+  height: 56px;
+  padding: 4px;
+  font-family: var(--font-pow);
+  font-size: 1.15rem;
+  color: var(--ink);
+  background: var(--yellow);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+  transform: rotate(8deg);
+}
+
+.comic-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  padding: 18px 16px 16px;
+}
+
+.comic-card__title {
+  margin: 0;
+  font-family: var(--font-impact);
+  font-size: 1rem;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.comic-card__cta {
+  margin-top: auto;
+  font-family: var(--font-impact);
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--red);
+}
+
+/* =========================== BOTÃO COMIC =============================== */
+.comic-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-family: var(--font-impact);
+  font-size: .95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cream);
+  background: var(--blue);
+  border: var(--line) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform .1s ease, box-shadow .1s ease, background .1s ease;
+}
+
+.comic-btn:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow-lg); background: var(--blue-dark); color: var(--cream); }
+.comic-btn:active { transform: translate(4px, 4px); box-shadow: var(--shadow-sm); }
+
+.comic-btn--red  { background: var(--red); }
+.comic-btn--red:hover { background: var(--red-dark); }
+
+.comic-btn--danger {
+  padding: 8px 16px;
+  font-size: .72rem;
+  background: var(--paper);
+  color: var(--red-dark);
+  box-shadow: var(--shadow-sm);
+}
+.comic-btn--danger:hover { background: var(--red); color: var(--cream); box-shadow: var(--shadow); }
+
+/* ======================= DETALHES DO PRODUTO ========================== */
+.comic-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 5vw, 56px);
+  align-items: start;
+  padding-top: 40px;
+}
+
+.comic-detail__cover {
+  position: relative;
+  border: 5px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  rotate: -2deg;
+  background: var(--ink);
+}
+
+.comic-detail__cover img { width: 100%; display: block; }
+
+.comic-detail__panel {
+  padding: clamp(20px, 3vw, 32px);
+  background: var(--paper-2);
+  border: var(--line) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.comic-detail__tag {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 5px 14px;
+  font-family: var(--font-impact);
+  font-size: .68rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: var(--red);
+  border: 3px solid var(--ink);
+  transform: rotate(-2deg);
+}
+
+.comic-detail__title {
+  margin: 0 0 18px;
+  font-family: var(--font-pow);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: .98;
+  letter-spacing: 1px;
+}
+
+.comic-detail__label {
+  margin: 0 0 4px;
+  font-family: var(--font-impact);
+  font-size: .72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.comic-detail__desc {
+  margin: 0 0 22px;
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.comic-detail__price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 24px;
+  padding: 8px 18px;
+  font-family: var(--font-pow);
+  font-size: 2rem;
+  color: var(--ink);
+  background: var(--yellow);
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: var(--shadow-sm);
+  transform: rotate(-1.5deg);
+}
+
+/* ============================= CARRINHO =============================== */
+.comic-cart { padding-top: 40px; }
+
+.comic-cart__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.comic-cart__title {
+  margin: 0;
+  font-family: var(--font-pow);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 7vw, 4rem);
+  line-height: .9;
+  @include ink-outline(var(--yellow));
+}
+
+.comic-cart__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.comic-cart__item {
+  display: grid;
+  grid-template-columns: 46px 1fr auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--paper-2);
+  border: var(--line) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.comic-cart__item:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow); }
+
+.comic-cart__badge {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  font-family: var(--font-pow);
+  font-size: 1.3rem;
+  color: var(--cream);
+  background: var(--blue);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+}
+
+.comic-cart__name { font-family: var(--font-impact); font-size: 1rem; line-height: 1.2; }
+
+.comic-cart__meta {
+  font-family: var(--font-impact);
+  font-size: .72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.comic-cart__price {
+  font-family: var(--font-pow);
+  font-size: 1.4rem;
+  color: var(--red-dark);
+  white-space: nowrap;
+}
+
+.comic-cart__footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 18px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: var(--line) dashed var(--ink);
+}
+
+.comic-cart__total-label {
+  font-family: var(--font-impact);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.comic-cart__total {
+  padding: 8px 20px;
+  font-family: var(--font-pow);
+  font-size: 2.1rem;
+  color: var(--ink);
+  background: var(--yellow);
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Estado vazio */
+.comic-empty {
+  display: grid;
+  place-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: clamp(40px, 9vw, 90px) 20px;
+  background: var(--paper-2);
+  border: var(--line) dashed var(--ink);
+  border-radius: var(--radius);
+}
+
+.comic-empty__pow {
+  font-family: var(--font-pow);
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  @include ink-outline(var(--yellow));
+}
+
+.comic-empty__text { font-family: var(--font-impact); font-size: 1rem; }
+
+/* ========================= ESTADO DE LOADING ========================= */
+.comic-loading {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.comic-loading__pow {
+  font-family: var(--font-pow);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  color: var(--red);
+  text-shadow: 3px 3px 0 var(--ink);
+  animation: wobble 1.1s ease-in-out infinite;
+}
+
+/* ============================ ANIMAÇÕES ============================== */
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(18px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(13deg) scale(1); }
+  50%      { transform: rotate(16deg) scale(1.05); }
+}
+
+/* =========================== RESPONSIVO ============================== */
+@media (max-width: 760px) {
+  .comic-detail { grid-template-columns: 1fr; }
+  .comic-detail__cover { rotate: 0deg; max-width: 340px; margin: 0 auto; }
+  .comic-cart__item { grid-template-columns: 40px 1fr auto; }
+  .comic-cart__item .comic-btn--danger { grid-column: 1 / -1; justify-self: start; }
+  .comic-nav__brand-text { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .comic-card { opacity: 1; transform: none; }
+}

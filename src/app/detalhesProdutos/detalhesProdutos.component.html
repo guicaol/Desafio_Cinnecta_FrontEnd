@@ -1,15 +1,35 @@
-<div class="row">
-  <div class="col-sm-6">
-    <div class= "d-flex justify-content-center"><img class="card-img-top" src="{{comic.data.results[0].thumbnail.path}}/portrait_incredible.jpg"></div>
+<ng-container *ngIf="comic?.data?.results as results; else loading">
+  <div class="comic-detail" *ngIf="results[0] as item">
+
+    <div class="comic-detail__cover">
+      <img src="{{ item.thumbnail.path }}/portrait_incredible.jpg" alt="Capa de {{ item.title }}">
+    </div>
+
+    <div class="comic-detail__panel">
+      <span class="comic-detail__tag">Edição Marvel</span>
+      <h1 class="comic-detail__title">{{ item.title }}</h1>
+
+      <p class="comic-detail__label">Sobre</p>
+      <p class="comic-detail__desc">
+        {{ item.description || 'Sem sinopse disponível para esta edição — mas toda HQ da Marvel guarda uma surpresa.' }}
+      </p>
+
+      <p class="comic-detail__label">Preço</p>
+      <div class="comic-detail__price"><span>$</span>{{ item.prices[0].price }}</div>
+
+      <div>
+        <button type="button" (click)="buy()" class="comic-btn comic-btn--red">
+          Adicionar ao carrinho
+        </button>
+      </div>
+    </div>
+
   </div>
-  <div class="col-sm-6">
-    <h1 class="display-4">{{comic.data.results[0].title}}</h1>
-    <p class="lead">About:</p>
-    <p class="lead">{{comic.data.results[0].description}}</p>
-    <p class="lead">Price: {{comic.data.results[0].prices[0].price}}</p>
-    <button type="button" (click)="buy()" class="btn btn-secondary btn-lg btn-block">Add to List buy</button>
+</ng-container>
+
+<ng-template #loading>
+  <div class="comic-loading">
+    <span class="comic-loading__pow">Loading…</span>
+    <p>Abrindo a edição.</p>
   </div>
-
-</div>
-
-
+</ng-template>
